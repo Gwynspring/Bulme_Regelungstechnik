@@ -1,64 +1,51 @@
-from regelung import P, PI, PID, PT1, PT2
-from regelung import closed_loop, simulate_step
-from regelung import plot_step, plot_step_with_metrics
+from regelung import (
+    PT1, PT2, 
+    PID, 
+    closed_loop, 
+    simulate_step,
+    simulate_signal, 
+    simulate_step_scaled,
+    plot_step,
+    plot_step_with_metrics
+)
+import numpy as np
 
-def beispiel_pt1_mit_p_regler():
-    """Beispiel: PT1-Strecke mit P-Regler"""
+def beispiel_simulate_signal():
+    """Beispiel mit simulate_signal - volle Kontrolle"""
     strecke = PT1(K=2.0, T=1.0)
-    regler = P(Kp=1.5)
     
-    system = closed_loop(regler, strecke)
-    t, y = simulate_step(system)
+    # Zeitvektor
+    t = np.linspace(0, 10, 1000)
     
-    plot_step(t, y, 
-             title="PT1 mit P-Regler")
+    # Verschiedene Eingangssignale
+    
+    # 1. Sprung mit Amplitude 2.5
+    u_sprung = np.ones_like(t) * 2.5
+    t1, y1 = simulate_signal(strecke.tf(), t, u_sprung)
+    plot_step(t1, y1, title="Sprung: u=2.5", 
+              show_input=True, u_amplitude=2.5)
+    
+    # 2. Rampe
+    u_rampe = t * 0.5  # Steigung 0.5
+    t2, y2 = simulate_signal(strecke.tf(), t, u_rampe)
+    
+    # 3. Sinus
+    u_sinus = np.sin(2 * np.pi * 0.2 * t)  # 0.2 Hz
+    t3, y3 = simulate_signal(strecke.tf(), t, u_sinus)
 
-def beispiel_pt2_mit_pid():
-    """Beispiel: PT2-Strecke mit PID-Regler"""
-    strecke = PT2(K=1.0, T1=2.0, T2=0.5)
-    regler = PID(Kp=2.0, Ti=1.5, Td=0.3)
-    
-    system = closed_loop(regler, strecke)
-    t, y = simulate_step(system)
-    
-    plot_step(t, y, 
-             title="PT2 mit PID-Regler")
-
-def beispiel_pt1_strecke():
-    """Beispiel: PT1-Strecke ohne Regler (offener Kreis)"""
-    strecke = PT1(K=1.0, T=2.0)
-    
-    # Direkt die Strecke simulieren (kein closed_loop!)
-    t, y = simulate_step(strecke.tf())
-    
-    plot_step(t, y, 
-             title="PT1-Strecke (offener Kreis)")
-
-def beispiel_pt2_strecke():
-    """Beispiel: PT2-Strecke ohne Regler"""
-    strecke = PT2(K=1.0, T1=2.0, T2=0.5)
-    
-    t, y = simulate_step(strecke.tf())
-    
-    plot_step(t, y, 
-             title="PT2-Strecke (offener Kreis)")
-
-# Einfacher Plot
-def beispiel_einfach():
+def beispiel_simulate_step_scaled():
+    """Beispiel mit simulate_step_scaled - einfacher für Sprünge"""
     strecke = PT1(K=2.0, T=1.0)
-    t, y = simulate_step(strecke.tf())
-    plot_step(t, y, title="PT1-Strecke")
-
-# Mit Metriken
-def beispiel_mit_metriken():
-    strecke = PT2(K=1.0, T1=2.0, T2=0.5)
-    regler = PID(Kp=2.0, Ti=1.5, Td=0.3)
-    system = closed_loop(regler, strecke)
-    t, y = simulate_step(system)
-    plot_step_with_metrics(t, y, 
-                          title="PT2 mit PID-Regler")
+    
+    for amplitude in [0.5, 1.0, 2.0, 3.0]:
+        t, y = simulate_step_scaled(strecke.tf(), amplitude=amplitude)
+        plot_step(t, y, 
+                  title=f"PT1: Sprung u={amplitude}",
+                  show_input=True,
+                  u_amplitude=amplitude,
+                  save=f"report/figures/sprung_{amplitude}.png")
+        print(f"Amplitude {amplitude}: Endwert = {y[-1]:.3f}")
 
 if __name__ == "__main__":
-    beispiel_einfach()
-    beispiel_pt1_strecke()
-    beispiel_mit_metriken()
+    beispiel_simulate_signal()
+    beispiel_simulate_step_scaled()

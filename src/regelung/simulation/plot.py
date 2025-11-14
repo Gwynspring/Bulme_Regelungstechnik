@@ -2,31 +2,32 @@ import matplotlib.pyplot as plt
 import numpy as np 
 
 def plot_step(t, y, title="Sprungantwort", save=None, show=True, 
-              xlabel="Zeit [s]", ylabel="y(t)", figsize=(10, 6)):
+              xlabel="Zeit [s]", ylabel="y(t)", figsize=(10, 6),
+              show_input=False, u_amplitude=1.0):
     """
-    Plottet Sprungantwort mit verbessertem Styling.
+    Plottet Sprungantwort mit optionalem Eingangssignal.
     
     Args:
-        t: Zeitvektor
-        y: Ausgangssignal
-        title: Titel des Plots
-        save: Pfad zum Speichern (optional)
-        show: Plot anzeigen (True/False)
-        xlabel: Label der x-Achse
-        ylabel: Label der y-Achse
-        figsize: Größe der Figure (width, height)
+        ...
+        show_input: Zeige Eingangssignal (default: False)
+        u_amplitude: Amplitude des Sprungs (default: 1.0)
     """
     plt.figure(figsize=figsize)
-    plt.plot(t, y, linewidth=2, color='#2E86AB', label='System Response')
     
-    # Horizontale Linie für stationären Endwert
+    # Eingangssignal (optional)
+    if show_input:
+        u = np.ones_like(t) * u_amplitude
+        u[t < 0] = 0
+        plt.plot(t, u, 'r--', linewidth=2, alpha=0.7, label=f'Eingang u(t) = {u_amplitude}')
+    
+    # Ausgangssignal
+    plt.plot(t, y, linewidth=2.5, color='#2E86AB', label='Ausgang y(t)')
+    
     steady_state = y[-1]
-    plt.axhline(y=steady_state, color='red', linestyle='--', 
+    plt.axhline(y=steady_state, color='olive', linestyle='--', 
                 linewidth=1, alpha=0.7, label=f'Endwert: {steady_state:.3f}')
     
-    # Vertikale Linie bei t=0 (Sprung)
     plt.axvline(x=0, color='gray', linestyle=':', linewidth=1, alpha=0.5)
-    
     plt.grid(True, alpha=0.3, linestyle='--')
     plt.title(title, fontsize=14, fontweight='bold')
     plt.xlabel(xlabel, fontsize=12)
@@ -100,6 +101,7 @@ def plot_step_with_metrics(t, y, title="Sprungantwort", save=None):
         f"Ausregelzeit: {settling_time:.2f}s\n"
         f"Anstiegszeit: {rise_time:.2f}s"
     )
+
     ax.text(0.02, 0.98, metrics_text, transform=ax.transAxes,
             verticalalignment='top', bbox=dict(boxstyle='round', 
             facecolor='wheat', alpha=0.8), fontsize=10, fontfamily='monospace')

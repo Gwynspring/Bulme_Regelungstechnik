@@ -6,6 +6,7 @@ from regelung.simulation import (
     closed_loop, 
     simulate_step, 
     simulate_signal,
+    simulate_step_scaled,
     plot_step,
     plot_step_with_metrics
 )
@@ -18,7 +19,11 @@ __all__ = [
     # Strecken
     "PT1", "PT2",
     # Simulation
-    "closed_loop", "simulate_step", "simulate_signal",
+    "closed_loop", 
+    "simulate_step", 
+    "simulate_signal",
+    "simulate_step_scaled",
     # Plot
-    "plot_step", "plot_step_with_metrics"
+    "plot_step", 
+    "plot_step_with_metrics"
 ]
