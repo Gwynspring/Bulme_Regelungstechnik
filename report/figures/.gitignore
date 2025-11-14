@@ -1,0 +1,9 @@
+*.png
+*.jpg
+*.jpeg
+*.svg
+*.pdf
+
+# Keep this .gitignore file
+!.gitignore
+
