@@ -1,6 +1,7 @@
 """Regelungstechnik-Bibliothek"""
 
 from regelung.regler import P, PI, PID
+from regelung.simulation.plot import plot_signal
 from regelung.strecken import PT1, PT2,Totzeit 
 from regelung.simulation import (
     closed_loop, 
@@ -8,7 +9,8 @@ from regelung.simulation import (
     simulate_signal,
     simulate_step_scaled,
     plot_step,
-    plot_step_with_metrics
+    plot_step_with_metrics,
+    plot_signal
 )
 
 __version__ = "0.1.0"
@@ -25,5 +27,6 @@ __all__ = [
     "simulate_step_scaled",
     # Plot
     "plot_step", 
-    "plot_step_with_metrics"
+    "plot_step_with_metrics",
+    "plot_signal"
 ]

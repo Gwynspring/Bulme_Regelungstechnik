@@ -1,0 +1,77 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.17.8"
+  },
+  "cells": [
+    {
+      "id": "MJUe",
+      "code_hash": "d18e59e17ebb9b1e9100a4ed51662c16",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"totzeit-approximation-mit-pade\">Totzeit-Approximation mit Pad\u00e9</h1>\n<h2 id=\"totzeit-dead-time\">Totzeit (Dead Time)</h2>\n<span class=\"paragraph\">Eine ideale Totzeit verz\u00f6gert das Signal um <marimo-tex class=\"arithmatex\">||(T_t||)</marimo-tex> Sekunden:</span>\n<marimo-tex class=\"arithmatex\">||[G(s) = e^{-T_t \\cdot s}||]</marimo-tex><span class=\"paragraph\">Problem: Nicht-rationale Funktion \u2192 schwer zu simulieren!</span>\n<h2 id=\"pade-approximation\">Pad\u00e9-Approximation</h2>\n<span class=\"paragraph\">Approximiert die Totzeit als rationale Funktion:</span>\n<span class=\"paragraph\"><strong>1. Ordnung:</strong>\n<marimo-tex class=\"arithmatex\">||(<marimo-tex class=\"arithmatex\">||(G(s) \\approx \\frac{1 - \\frac{T_t}{2} s}{1 + \\frac{T_t}{2} s}||)</marimo-tex>||)</marimo-tex></span>\n<span class=\"paragraph\"><strong>2. Ordnung:</strong>\n<marimo-tex class=\"arithmatex\">||(<marimo-tex class=\"arithmatex\">||(G(s) \\approx \\frac{1 - \\frac{T_t}{2} s + \\frac{T_t^2}{12} s^2}{1 + \\frac{T_t}{2} s + \\frac{T_t^2}{12} s^2}||)</marimo-tex>||)</marimo-tex></span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "bcf1671cdb6fb9dcb7235b9a69e7be82",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"parameter\">Parameter</h2></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "SFPL",
+      "code_hash": "d582bf9530c6f651c2404450fd54cebb",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"praktische-anwendung\">Praktische Anwendung</h2>\n<span class=\"paragraph\">Totzeiten treten auf bei:</span>\n<ul>\n<li><strong>Transportvorg\u00e4ngen</strong> (F\u00f6rderb\u00e4nder, Pipelines)</li>\n<li><strong>Messketten</strong> (Sensoren, A/D-Wandler)</li>\n<li><strong>Netzwerkverz\u00f6gerungen</strong> (Remote-Systeme)</li>\n</ul>\n<h3 id=\"tipps\">Tipps</h3>\n<ol>\n<li>Totzeit so klein wie m\u00f6glich halten</li>\n<li>Bei langen Totzeiten: Smith-Pr\u00e4diktor verwenden</li>\n<li>Regler-Tuning wird schwieriger mit Totzeit</li>\n</ol></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Hbol",
+      "code_hash": "1d0db38904205bec4d6f6f6a1f6cec3e",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "cd4c0525fd561809fc6c43dfbaab22ee",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "33febc7155f7d1ae58a1c4900bbecf8a",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "PKri",
+      "code_hash": "c47eb8d0e917c3296009c1bc25d1bc7d",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "Xref",
+      "code_hash": "73eeb6ed1b8b6b786168aa762e2c3497",
+      "outputs": [],
+      "console": []
+    }
+  ]
+}

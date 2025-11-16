@@ -119,3 +119,46 @@ def plot_step_with_metrics(t, y, title="Sprungantwort", save=None):
         print(f"✓ Plot gespeichert: {save}")
     
     plt.show()
+
+def plot_signal(t, y, u=None, title="Signalverlauf", save=None, show=True,
+                xlabel="Zeit [s]", ylabel="Signal", figsize=(12, 6)):
+    """
+    Plottet beliebige Ein- und Ausgangssignale.
+    
+    Args:
+        t: Zeitvektor
+        y: Ausgangssignal
+        u: Eingangssignal (optional)
+        title: Titel des Plots
+        save: Pfad zum Speichern
+        show: Plot anzeigen
+        xlabel: Label der x-Achse
+        ylabel: Label der y-Achse
+        figsize: Größe der Figure
+    """
+    fig, ax = plt.subplots(figsize=figsize)
+    
+    # Eingangssignal (optional)
+    if u is not None:
+        ax.plot(t, u, 'r--', linewidth=2, alpha=0.7, label='Eingang u(t)')
+    
+    # Ausgangssignal
+    ax.plot(t, y, 'b-', linewidth=2.5, label='Ausgang y(t)')
+    
+    ax.grid(True, alpha=0.3, linestyle='--')
+    ax.axhline(y=0, color='k', linewidth=0.5)
+    ax.set_title(title, fontsize=14, fontweight='bold')
+    ax.set_xlabel(xlabel, fontsize=12)
+    ax.set_ylabel(ylabel, fontsize=12)
+    ax.legend(loc='best', fontsize=11)
+    
+    plt.tight_layout()
+    
+    if save:
+        plt.savefig(save, dpi=300, bbox_inches='tight')
+        print(f"✓ Plot gespeichert: {save}")
+    
+    if show:
+        plt.show()
+    else:
+        plt.close()

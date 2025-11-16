@@ -10,6 +10,7 @@ from regelung.simulation.core import (
 from regelung.simulation.plot import (
     plot_step,
     plot_step_with_metrics,
+    plot_signal
 )
 
 __all__ = [
@@ -19,4 +20,5 @@ __all__ = [
     "simulate_step_scaled",
     "plot_step",
     "plot_step_with_metrics",
+    "plot_signal"
 ]
