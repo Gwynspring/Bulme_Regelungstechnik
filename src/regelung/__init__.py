@@ -2,7 +2,7 @@
 
 from regelung.regler import P, PI, PID
 from regelung.simulation.plot import plot_signal
-from regelung.strecken import PT1, PT2,Totzeit 
+from regelung.strecken import PT1, PT2,Totzeit, D, DT1 
 from regelung.simulation import (
     closed_loop, 
     simulate_step, 
@@ -19,7 +19,7 @@ __all__ = [
     # Regler
     "P", "PI", "PID",
     # Strecken
-    "PT1", "PT2", "Totzeit"
+    "PT1", "PT2", "Totzeit", "D", "DT1",
     # Simulation
     "closed_loop", 
     "simulate_step", 

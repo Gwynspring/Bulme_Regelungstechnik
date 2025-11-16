@@ -1,8 +1,16 @@
 from control import TransferFunction
+import math
 
 class PT1:
     """
     PT1-Regelstrecke: G(s) = K / (T s + 1)
+
+    Parameter:
+        K (float): Verstärkung
+        T (float): Zeitkonstante
+
+    Rückgabe:
+        PT1-Übertragungsfunktion
     """
     def __init__(self, K: float, T: float):
         self.K = K
@@ -12,9 +20,24 @@ class PT1:
     def tf(self):
         return self.G
 
+
 class PT2:
     """
-    PT2-Regelstrecke: G(s) = K / ((T1 s + 1)(T2 s + 1))
+    PT2-Regelstrecke:
+
+    Allgemeine Form:
+        G(s) = K / ((T1 s + 1)(T2 s + 1))
+
+    Standardform:
+        G(s) = K / (T² s² + 2 D T s + 1)
+
+    Parameter:
+        K (float): Verstärkung
+        T1 (float): Zeitkonstante 1
+        T2 (float): Zeitkonstante 2
+
+    Rückgabe:
+        PT2-Übertragungsfunktion
     """
     def __init__(self, K: float, T1: float, T2: float):
         self.K = K
@@ -25,106 +48,61 @@ class PT2:
             [T1*T2, T1 + T2, 1]
         )
 
-    def tf(self):
-        return self.G
-
-class I:
-    """
-    I-Regelstrecke (Integrator): G(s) = KI / s = 1 / (TI·s)
-    
-    Übertragungsfunktion: 
-    - Mit KI: G(s) = KI / s
-    - Mit TI: G(s) = 1 / (TI·s)
-    
-    Zusammenhang: KI = 1/TI
-    """
-    
-    def __init__(self, KI: float):
-        """
-        Erstellt I-Strecke mit Integrierverstärkung.
-        
-        Args:
-            KI: Integrierverstärkung
-        """
-        self.KI = KI
-        self.TI = 1.0 / KI
-        self.G = TransferFunction([self.KI], [1, 0])
-    
     @classmethod
-    def from_TI(cls, TI: float):
+    def from_damping(cls, K: float, D: float, T: float):
         """
-        Erstellt I-Strecke aus Integrierzeitkonstante.
-        
-        Args:
-            TI: Integrierzeitkonstante
-            
-        Returns:
-            I-Strecke mit KI = 1/TI
-            
-        Beispiel:
-            >>> strecke = I.from_TI(0.5)  # Ergibt KI=2.0
+        PT2-Strecke aus Dämpfung D und Zeitkonstante T.
+
+        Standardform:
+            G(s) = K / (T² s² + 2 D T s + 1)
+
+        Parameter:
+            K (float): Verstärkung
+            D (float): Dämpfungsbeiwert
+            T (float): Zeitkonstante
+
+        Rückgabe:
+            PT2-Objekt in der Standardform
         """
-        KI = 1.0 / TI
-        return cls(KI)
-    
+        a2 = T * T
+        a1 = 2 * D * T
+        a0 = 1
+
+        G = TransferFunction([K], [a2, a1, a0])
+
+        obj = cls.__new__(cls)
+        obj.K = K
+        obj.T1 = None
+        obj.T2 = None
+        obj.G = G
+        return obj
+
     def tf(self):
         return self.G
-    
-    def __repr__(self):
-        return f"I(KI={self.KI:.3f}, TI={self.TI:.3f})"
 
-from control import TransferFunction
+    @staticmethod
+    def identify_from_step(h1: float, h_inf: float, t1: float):
+        """
+        Berechnet Dämpfung D und Zeitkonstante T aus Messwerten einer Sprungantwort.
 
-class IT1:
-    """
-    IT1-Regelstrecke: G(s) = KI / (s·(T1·s + 1))
-    
-    Kombination aus Integrator und PT1-Glied.
-    
-    Übertragungsfunktion:
-    - G(s) = KI / (s·(T1·s + 1))
-    
-    Zusammenhang: KI = 1/TI
-    """
-    
-    def __init__(self, T1: float, KI: float):
-        """
-        Erstellt IT1-Strecke mit Integrierverstärkung.
-        
-        Args:
-            T1: Zeitkonstante des PT1-Glieds
-            KI: Integrierverstärkung
-            
-        Beispiel:
-            >>> strecke = IT1(T1=2.0, KI=1.5)
-        """
-        self.T1 = T1
-        self.KI = KI
-        self.TI = 1.0 / KI
-        self.G = TransferFunction([self.KI], [T1, 1, 0])
-    
-    @classmethod
-    def from_TI(cls, T1: float, TI: float):
-        """
-        Erstellt IT1-Strecke aus Integrierzeitkonstante.
-        
-        Args:
-            T1: Zeitkonstante des PT1-Glieds
-            TI: Integrierzeitkonstante
-            
-        Returns:
-            IT1-Strecke mit KI = 1/TI
-            
-        Beispiel:
-            >>> strecke = IT1.from_TI(T1=2.0, TI=0.67)
-        """
-        KI = 1.0 / TI
-        return cls(T1=T1, KI=KI)
-    
-    def tf(self):
-        return self.G
-    
-    def __repr__(self):
-        return f"IT1(T1={self.T1:.3f}, KI={self.KI:.3f}, TI={self.TI:.3f})"
+        Parameter:
+            h1 (float): Erster Peak der Sprungantwort
+            h_inf (float): Endwert der Sprungantwort
+            t1 (float): Zeit des ersten Peaks
 
+        Rückgabe:
+            (D, T): Tupel aus Dämpfung und Zeitkonstante
+
+        Formeln:
+            D = - ln((h1/h_inf) - 1) / sqrt(pi² + (ln((h1/h_inf) - 1))²)
+            T = t1 * sqrt(1 - D²) / pi
+        """
+
+        x = (h1 / h_inf) - 1
+        ln_term = math.log(x)
+
+        D = -ln_term / math.sqrt(math.pi**2 + ln_term**2)
+        T = t1 * math.sqrt(1 - D**2) / math.pi
+
+        return D, T
 
