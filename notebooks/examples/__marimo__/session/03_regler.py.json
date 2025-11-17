@@ -1,0 +1,63 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.17.8"
+  },
+  "cells": [
+    {
+      "id": "MJUe",
+      "code_hash": "8f8d5350f442cb6b63c008852f876ebb",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"geschlossener-regelkreis\">Geschlossener Regelkreis</h1>\n<h2 id=\"p-regler-mit-pt1-strecke\">P-Regler mit PT1-Strecke</h2>\n<span class=\"paragraph\">Experimentiere mit verschiedenen Reglerparametern!</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Hbol",
+      "code_hash": "1d0db38904205bec4d6f6f6a1f6cec3e",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "3fc99520a1814d502f47fc60761bbf6b",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "ae7475266681ba08ba70f22feffa5c4b",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "7a09b5e93449e4521d0bcd8ac6efc9c9",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "PKri",
+      "code_hash": "93bcbedbca8fb45670385d33fcdc653f",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "Xref",
+      "code_hash": "d10a476fe5feaabc0c7a13dfbcd4d3b7",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "SFPL",
+      "code_hash": "b6b8e95b96fece3781c9c98a37578caa",
+      "outputs": [],
+      "console": []
+    }
+  ]
+}

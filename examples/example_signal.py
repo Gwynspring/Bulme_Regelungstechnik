@@ -8,7 +8,7 @@ import numpy as np
 
 def beispiel_simulate_signal():
     """Beispiel mit simulate_signal - volle Kontrolle"""
-    strecke = PT1(K=2.0, T=1.0)
+    strecke = PT1(KP=2.0, T=1.0)
     
     # Zeitvektor
     t = np.linspace(0, 10, 1000)
@@ -31,7 +31,7 @@ def beispiel_simulate_signal():
 
 def beispiel_simulate_step_scaled():
     """Beispiel mit simulate_step_scaled - einfacher für Sprünge"""
-    strecke = PT1(K=2.0, T=1.0)
+    strecke = PT1(KP=2.0, T=1.0)
     
     for amplitude in [0.5, 1.0, 2.0, 3.0]:
         t, y = simulate_step_scaled(strecke.tf(), amplitude=amplitude)

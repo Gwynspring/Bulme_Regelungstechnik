@@ -5,11 +5,11 @@ from regelung import (
 )
 
 from regelung.simulation.plot import plot_step_with_metrics
-from regelung.strecken.pt import I
+from regelung.strecken.int import I
 
 def beispiel_simulate_pt1():
     """Beispiel für eine PT1 Strecke"""
-    strecke = PT1(K=3.0, T=1.3)  # T sollte nicht 0.0 sein!
+    strecke = PT1(KP=3.0, T=1.3)  # T sollte nicht 0.0 sein!
     
     t, y = simulate_step(strecke.tf())
     
@@ -22,7 +22,7 @@ def beispiel_simulate_pt1():
 
 def beispiel_simulate_pt2():
     """Beispiel für eine PT2 Strecke"""
-    strecke = PT2(K=2,T1=1, T2=1.5)
+    strecke = PT2(KP=2,T1=1, T2=1.5)
 
     t,y = simulate_step(strecke.tf())
 

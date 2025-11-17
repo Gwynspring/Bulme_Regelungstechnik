@@ -3,19 +3,19 @@ import math
 
 class PT1:
     """
-    PT1-Regelstrecke: G(s) = K / (T s + 1)
+    PT1-Regelstrecke: G(s) = KP / (T s + 1)
 
-    Parameter:
-        K (float): Verstärkung
+    Args:
+        KP (float): Verstärkung
         T (float): Zeitkonstante
 
-    Rückgabe:
+    Returns:
         PT1-Übertragungsfunktion
     """
-    def __init__(self, K: float, T: float):
-        self.K = K
+    def __init__(self, KP: float, T: float):
+        self.KP = KP
         self.T = T
-        self.G = TransferFunction([K], [T, 1])
+        self.G = TransferFunction([KP], [T, 1])
 
     def tf(self):
         return self.G
@@ -26,52 +26,52 @@ class PT2:
     PT2-Regelstrecke:
 
     Allgemeine Form:
-        G(s) = K / ((T1 s + 1)(T2 s + 1))
+        G(s) = KP / ((T1 s + 1)(T2 s + 1))
 
     Standardform:
-        G(s) = K / (T² s² + 2 D T s + 1)
+        G(s) = KP / (T² s² + 2 D T s + 1)
 
-    Parameter:
-        K (float): Verstärkung
+    Args:
+        KP (float): Verstärkung
         T1 (float): Zeitkonstante 1
         T2 (float): Zeitkonstante 2
 
-    Rückgabe:
+    Returns:
         PT2-Übertragungsfunktion
     """
-    def __init__(self, K: float, T1: float, T2: float):
-        self.K = K
+    def __init__(self, KP: float, T1: float, T2: float):
+        self.KP = KP
         self.T1 = T1
         self.T2 = T2
         self.G = TransferFunction(
-            [K],
+            [KP],
             [T1*T2, T1 + T2, 1]
         )
 
     @classmethod
-    def from_damping(cls, K: float, D: float, T: float):
+    def from_damping(cls, KP: float, D: float, T: float):
         """
         PT2-Strecke aus Dämpfung D und Zeitkonstante T.
 
         Standardform:
-            G(s) = K / (T² s² + 2 D T s + 1)
+            G(s) = KP / (T² s² + 2 D T s + 1)
 
-        Parameter:
-            K (float): Verstärkung
+        Args:
+            KP (float): Verstärkung
             D (float): Dämpfungsbeiwert
             T (float): Zeitkonstante
 
-        Rückgabe:
+        Returns:
             PT2-Objekt in der Standardform
         """
         a2 = T * T
         a1 = 2 * D * T
         a0 = 1
 
-        G = TransferFunction([K], [a2, a1, a0])
+        G = TransferFunction([KP], [a2, a1, a0])
 
         obj = cls.__new__(cls)
-        obj.K = K
+        obj.KP = KP
         obj.T1 = None
         obj.T2 = None
         obj.G = G
@@ -85,12 +85,12 @@ class PT2:
         """
         Berechnet Dämpfung D und Zeitkonstante T aus Messwerten einer Sprungantwort.
 
-        Parameter:
+        Args:
             h1 (float): Erster Peak der Sprungantwort
             h_inf (float): Endwert der Sprungantwort
             t1 (float): Zeit des ersten Peaks
 
-        Rückgabe:
+        Returns:
             (D, T): Tupel aus Dämpfung und Zeitkonstante
 
         Formeln:
