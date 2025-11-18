@@ -11,7 +11,8 @@ from regelung.simulation.core import (
 from regelung.simulation.plot import (
     plot_step,
     plot_step_with_metrics,
-    plot_signal
+    plot_signal,
+    get_step_metrics
 )
 
 __all__ = [
@@ -22,5 +23,6 @@ __all__ = [
     "series_connection",  
     "plot_step",
     "plot_step_with_metrics",
-    "plot_signal"
+    "plot_signal",
+    "get_step_metrics"
 ]

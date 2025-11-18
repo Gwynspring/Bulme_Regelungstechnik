@@ -10,7 +10,7 @@ def _():
     return (mo,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md("""
     # Geschlossener Regelkreis
@@ -30,7 +30,7 @@ def _():
     return P, PI, PID, PT1, closed_loop, np, plt, simulate_step
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     regler_typ = mo.ui.dropdown(
         options=["P", "PI", "PID"],
@@ -41,7 +41,7 @@ def _(mo):
     return (regler_typ,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     # Streckenparameter
     K_s = mo.ui.slider(0.5, 5.0, step=0.5, value=2.0, label="Strecke K")
@@ -52,7 +52,7 @@ def _(mo):
     return K_s, T_s
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo, regler_typ):
     # Reglerparameter
     mo.md("### Reglerparameter")
@@ -79,7 +79,7 @@ def _(mo, regler_typ):
     return Kp, Td, Ti
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(
     K_s,
     Kp,
@@ -97,7 +97,7 @@ def _(
     simulate_step,
 ):
     # Strecke
-    strecke_r = PT1(K=K_s.value, T=T_s.value)
+    strecke_r = PT1(KP=K_s.value, T=T_s.value)
 
     # Regler erstellen
     if regler_typ.value == "P":
@@ -147,7 +147,7 @@ def _(
     return overshoot_r, steady_state_r
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo, overshoot_r, steady_state_r):
     # Regelgüte anzeigen
     mo.md(
@@ -165,11 +165,6 @@ def _(mo, overshoot_r, steady_state_r):
         - **PID-Regler**: Schneller, aber kann überschwingen
         """
     )
-    return
-
-
-@app.cell
-def _():
     return
 
 

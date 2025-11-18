@@ -22,7 +22,7 @@ def closed_loop(regler, strecke):
 
 def simulate_step(system, t_end=10.0):
     """
-    Simuliert Sprungantwort mit optionaler Zeitdauer.
+    Simuliert Sprungantwort mit einer Amplitude von 1 und optionaler Zeitdauer.
     
     Args:
         system: Transfer-Funktion oder Regelkreis
