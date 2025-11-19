@@ -8,40 +8,40 @@ class Controller(ABC):
         pass
 
 class P(Controller):
-    def __init__(self, Kp: float):
-        self.Kp = Kp
-        self._G = TransferFunction([Kp], [1])
+    def __init__(self, KP: float):
+        self.KP = KP
+        self._G = TransferFunction([KP], [1])
     
     def tf(self) -> TransferFunction:
         return self._G
     
     def __repr__(self):
-        return f"P(Kp={self.Kp})"
+        return f"P(KP={self.KP})"
 
 class PI(Controller):
-    def __init__(self, Kp:float, Ti:float):
-        self.Kp = Kp
-        self.Ti = Ti
-        self._G = TransferFunction([Kp*Ti, Kp], [Ti, 0])
+    def __init__(self, KP:float, TI:float):
+        self.KP = KP
+        self.TI = TI
+        self._G = TransferFunction([KP*TI, KP], [TI, 0])
 
     def tf(self) -> TransferFunction:
         return self._G
     
     def __repr__(self):
-        return f"P(Kp={self.Kp}, Ti={self.Ti})"
+        return f"P(KP={self.KP}, TI={self.TI})"
 
 class PID(Controller):
-    def __init__(self, Kp:float, Ti:float, Td: float):
-        self.Kp = Kp
-        self.Ti = Ti
-        self.Td = Td
-        self._G = TransferFunction([Kp*Ti*Td, Kp*Ti, Kp], [Ti, 0])
+    def __init__(self, KP:float, TI:float, TD: float):
+        self.KP = KP
+        self.TI = TI
+        self.TD = TD
+        self._G = TransferFunction([KP*TI*TD, KP*TI, KP], [TI, 0])
 
     def tf(self) -> TransferFunction:
         return self._G
     
     def __repr__(self):
-        return f"P(Kp={self.Kp}, Ti={self.Ti}, Td={self.Td})"
+        return f"P(KP={self.KP}, TI={self.TI}, TD={self.TD})"
 
 
 

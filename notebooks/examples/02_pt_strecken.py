@@ -4,136 +4,137 @@ __generated_with = "0.17.8"
 app = marimo.App(width="medium")
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _():
     import marimo as mo
     return (mo,)
 
 
-@app.cell
+@app.cell(hide_code=True)
+def _():
+    from regelung import PT1, PT2, simulate_step, plot_step
+    import matplotlib.pyplot as plt
+    return PT1, PT2, plt, simulate_step
+
+
+@app.cell(hide_code=True)
 def _(mo):
     mo.md("""
     # PT1 vs PT2 Strecken
 
-    Vergleich verschiedener Übertragungsglieder
+    Interaktiver Vergleich von PT1- und PT2-Übertragungsfunktionen mit Sprungantworten.
     """)
     return
 
 
-@app.cell
-def _():
-    from regelung import PT1, PT2, simulate_step
-    import matplotlib.pyplot as plt
-    import numpy as np
-    return PT1, PT2, np, plt, simulate_step
-
-
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
-    strecken_typ = mo.ui.radio(
-        options=["PT1", "PT2"],
-        value="PT1",
-        label="Streckentyp"
-    )
-    strecken_typ
-    return (strecken_typ,)
+    mo.md("""
+    ## PT1 Strecke
+    """)
+    return
 
 
-@app.cell
-def _(mo, strecken_typ):
-    # Parameter abhängig vom Typ
-    if strecken_typ.value == "PT1":
-        K = mo.ui.slider(0.5, 5.0, step=0.5, value=2.0, label="K")
-        T = mo.ui.slider(0.5, 5.0, step=0.5, value=1.0, label="T")
-        mo.hstack([K, T])
-    else:
-        K = mo.ui.slider(0.5, 5.0, step=0.5, value=1.0, label="K")
-        T1 = mo.ui.slider(0.5, 5.0, step=0.5, value=2.0, label="T1")
-        T2 = mo.ui.slider(0.5, 5.0, step=0.5, value=0.5, label="T2")
-        mo.hstack([K, T1, T2])
-    return K, T, T1, T2
+@app.cell(hide_code=True)
+def _(mo):
+    kp_pt1 = mo.ui.slider(0.5, 5.0, step=0.1, value=2.0, label="Verstärkung K")
+    t_pt1 = mo.ui.slider(0.5, 5.0, step=0.1, value=1.0, label="Zeitkonstante T")
+    mo.hstack([kp_pt1, t_pt1], justify="center", gap=2)
+    return kp_pt1, t_pt1
 
 
-@app.cell
-def _(K, PT1, PT2, T, T1, T2, np, plt, simulate_step, strecken_typ):
-    # Strecke erstellen
-    if strecken_typ.value == "PT1":
-        strecke_pt = PT1(K=K.value, T=T.value)
-        title_pt = f"PT1: K={K.value}, T={T.value}"
-    else:
-        strecke_pt = PT2(K=K.value, T1=T1.value, T2=T2.value)
-        title_pt = f"PT2: K={K.value}, T1={T1.value}, T2={T2.value}"
+@app.cell(hide_code=True)
+def _(PT1, kp_pt1, simulate_step, t_pt1):
+    strecke_pt1 = PT1(KP=kp_pt1.value, T=t_pt1.value)
+    t1, y1 = simulate_step(strecke_pt1.tf())
+    return strecke_pt1, t1, y1
 
-    # Simulation
-    t_pt, y_pt = simulate_step(strecke_pt.tf(), t_end=15.0)
-    u_pt = np.ones_like(t_pt)
 
-    # Plot
-    fig_pt, ax_pt = plt.subplots(figsize=(10, 6))
-
-    ax_pt.plot(t_pt, u_pt, 'r--', linewidth=2, alpha=0.7, label='Eingang u(t)')
-    ax_pt.plot(t_pt, y_pt, 'b-', linewidth=2.5, label='Ausgang y(t)')
-
-    steady_state_pt = y_pt[-1]
-    ax_pt.axhline(y=steady_state_pt, color='green', linestyle='--', 
-                  linewidth=1, alpha=0.7, label=f'Endwert: {steady_state_pt:.3f}')
-
-    ax_pt.grid(True, alpha=0.3)
-    ax_pt.set_xlabel("Zeit [s]", fontsize=12)
-    ax_pt.set_ylabel("Signal", fontsize=12)
-    ax_pt.set_title(title_pt, fontsize=14, fontweight='bold')
-    ax_pt.legend(loc='best')
-
+@app.cell(hide_code=True)
+def _(mo, plt, strecke_pt1, t1, y1):
+    fig_1 = plt.figure(figsize=(10,6))
+    plt.plot(t1, y1, label=f"PT1: K={strecke_pt1.KP:.1f}, T={strecke_pt1.T:.1f}", linewidth=2)
+    plt.axhline(y=1, color='red', linestyle='--', alpha=0.5, label='Eingangssignal')
+    plt.grid(True, alpha=0.3)
+    plt.xlabel('Zeit [s]')
+    plt.ylabel('Amplitude')
+    plt.title('PT1 Strecke')
+    plt.legend()
     plt.tight_layout()
-    fig_pt
-    return (steady_state_pt,)
-
-
-@app.cell
-def _(mo, steady_state_pt, strecken_typ):
-    info_text = f"""
-    ## System-Info
-
-    - **Typ**: {strecken_typ.value}
-    - **Endwert**: {steady_state_pt:.3f}
-    - **Ordnung**: {'1' if strecken_typ.value == 'PT1' else '2'}
-    """
-
-    mo.md(info_text)
+    axis = plt.gca()
+    mo.as_html(axis)
     return
 
 
-@app.cell
-def _():
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    ## PT2 Strecke
+    """)
     return
 
 
-@app.cell
-def _():
+@app.cell(hide_code=True)
+def _(mo):
+    kp_pt2 = mo.ui.slider(0.5, 5.0, step=0.1, value=1.0, label="Verstärkung K")
+    t1_pt2 = mo.ui.slider(0.5, 5.0, step=0.1, value=2.0, label="Zeitkonstante T1")
+    t2_pt2 = mo.ui.slider(0.5, 5.0, step=0.1, value=0.5, label="Zeitkonstante T2")
+    mo.hstack([kp_pt2, t1_pt2, t2_pt2], justify="center", gap=2)
+    return kp_pt2, t1_pt2, t2_pt2
+
+
+@app.cell(hide_code=True)
+def _(PT2, kp_pt2, t1_pt2, t2_pt2):
+    strecke_pt2 = PT2(KP=kp_pt2.value, T1=t1_pt2.value, T2=t2_pt2.value)
+    return (strecke_pt2,)
+
+
+@app.cell(hide_code=True)
+def _(mo, plt, simulate_step, strecke_pt2):
+    t2, y2 = simulate_step(strecke_pt2.tf())
+
+    fig_2 = plt.figure(figsize=(10,6))
+    label = f"PT2: K={strecke_pt2.KP:.1f}, T1={strecke_pt2.T1:.1f}, T2={strecke_pt2.T2}"
+    plt.plot(t2, y2, linewidth=2, label=label)
+    plt.axhline(y=1, color='red', linestyle='--', alpha=0.5, label='Eingangssignal')
+    plt.grid(True, alpha=0.3)
+    plt.xlabel('Zeit [s]')
+    plt.ylabel('Amplitude')
+    plt.title('PT2 Strecke')
+    plt.legend()
+    plt.tight_layout()
+    axis_2 = plt.gca()
+    mo.as_html(axis_2)
+    return t2, y2
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    ## Vergleich
+
+    Beide Sprungantworten im direkten Vergleich:
+    """)
     return
 
 
-@app.cell
-def _():
+@app.cell(hide_code=True)
+def _(mo, plt, strecke_pt1, strecke_pt2, t1, t2, y1, y2):
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(t1, y1, label=f"PT1: K={strecke_pt1.KP:.1f}, T={strecke_pt1.T:.1f}", linewidth=2)
+    ax.plot(t2, y2, label=f"PT2: K={strecke_pt2.KP:.1f}, T1={strecke_pt2.T1:.1f}, T2={strecke_pt2.T2:.1f}", linewidth=2)
+    ax.axhline(y=1, color='red', linestyle='--', alpha=0.5, label='Eingangssignal')
+    ax.grid(True, alpha=0.3)
+    ax.set_xlabel('Zeit [s]')
+    ax.set_ylabel('Amplitude')
+    ax.set_title('Vergleich PT1 vs PT2')
+    ax.legend()
+    plt.tight_layout()
+    mo.as_html(fig)
     return
 
 
-@app.cell
-def _():
-    return
-
-
-@app.cell
-def _():
-    return
-
-
-@app.cell
-def _():
-    return
-
-
-@app.cell
+@app.cell(hide_code=True)
 def _():
     return
 

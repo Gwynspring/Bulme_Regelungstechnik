@@ -1,23 +1,32 @@
 # Regelung
 
-Eine Python-Bibliothek für Regelungstechnik-Simulationen und -Analysen.
+![Python](https://img.shields.io/badge/python-3.12+-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+![uv](https://img.shields.io/badge/uv-managed-blueviolet.svg)
+![Control Systems](https://img.shields.io/badge/control--systems-0.10.2-orange.svg)
+![Matplotlib](https://img.shields.io/badge/matplotlib-latest-red.svg)
+
+Eine Python-Bibliothek für Regelungstechnik-Simulationen und -Analysen,
+basierend auf der [Python Control Systems Library](https://python-control.readthedocs.io/en/0.10.2/).
+
 
 ## Features
 
 - 🎯 **Regler**: P, PI, PID
-- 📊 **Strecken**: PT1, PT2 (erweiterbar)
-- 🔄 **Simulation**: Geschlossene Regelkreise, Sprungantworten
+- 📊 **Strecken**: PT1, PT2, I, IT1, D, DT1 und Totzeiten 
+- 🔄 **Simulation**: Geschlossene Regelkreise, Sprungantworten mit verschiedenen Eingangssignalen
 - 📈 **Visualisierung**: Plots mit und ohne Regelgütekriterien
-- 🧮 **Metriken**: Überschwingen, Ausregelzeit, Anstiegszeit
 
 ## Installation
 
 ```bash
-# Repository klonen
-git clone <repository-url>
-cd Regelung
+git clone https://github.com/Gwynspring/Bulme_Regelungstechnik.git
+cd Bulme_Regelungstechnik
+``` 
 
-# Mit uv installieren (empfohlen)
+ Mit [UV](https://docs.astral.sh/uv/getting-started/installation/) installieren (empfohlen)
+
+```bash
 uv pip install -e .
 
 # Oder mit pip
@@ -26,7 +35,7 @@ pip install -e .
 
 ### Abhängigkeiten
 
-- Python >= 3.10
+- Python >= 3.12
 - control
 - matplotlib
 - numpy
@@ -55,7 +64,7 @@ from regelung import PT2, PID, closed_loop, simulate_step, plot_step_with_metric
 
 # Strecke und Regler definieren
 strecke = PT2(K=1.0, T1=2.0, T2=0.5)
-regler = PID(Kp=2.0, Ti=1.5, Td=0.3)
+regler = PID(KP=2.0, TI=1.5, TD=0.3)
 
 # Regelkreis schließen
 system = closed_loop(regler, strecke)
@@ -77,11 +86,11 @@ strecke = PT1(K=2.0, T=1.0)
 
 plt.figure(figsize=(10, 6))
 
-for Kp in [0.5, 1.0, 2.0, 3.0]:
-    regler = P(Kp=Kp)
+for KP in [0.5, 1.0, 2.0, 3.0]:
+    regler = P(KP=Kp)
     system = closed_loop(regler, strecke)
     t, y = simulate_step(system)
-    plt.plot(t, y, label=f"Kp={Kp}")
+    plt.plot(t, y, label=f"Kp={regler.KP}")
 
 plt.grid(True)
 plt.legend()
@@ -94,18 +103,36 @@ plt.show()
 ## Projektstruktur
 
 ```
-Regelung/
-├── examples/           # Beispiel-Skripte
-│   └── main.py
+Bulme_Regelungstechnik/
+├── examples/                    # Beispiel-Skripte
+│   ├── example_signal.py
+│   ├── example_strecke.py
+│   └── totzeit.py
+├── notebooks/                   # Interaktive Notebooks (Marimo)
+│   ├── examples/
+│   │   ├── 01_grundlagen.py
+│   │   ├── 02_pt_strecken.py
+│   │   ├── 03_regler.py
+│   │   └── 04_totzeit.py
+│   └── test.py
 ├── src/
-│   └── regelung/      # Hauptpaket
-│       ├── regler/    # Regler-Implementierungen
-│       ├── strecken/  # Strecken-Modelle
-│       └── simulation/ # Simulation & Visualisierung
-├── report/            # Berichte und Grafiken
+│   └── regelung/               # Hauptpaket
+│       ├── regler/             # Regler-Implementierungen
+│       │   └── control.py
+│       ├── strecken/           # Strecken-Modelle
+│       │   ├── pt.py           # PT1, PT2
+│       │   ├── int.py          # I, IT1
+│       │   ├── diff.py         # D, DT1
+│       │   └── totzeit.py      # Totzeit
+│       └── simulation/         # Simulation & Visualisierung
+│           ├── core.py
+│           └── plot.py
+├── report/                     # Berichte und Grafiken
 │   ├── figures/
 │   └── report.md
 ├── pyproject.toml
+├── uv.lock
+├── LICENSE
 └── README.md
 ```
 
@@ -115,43 +142,43 @@ Regelung/
 
 #### P-Regler
 ```python
-regler = P(Kp=1.5)
+regler = P(KP=1.5)
 ```
-- `Kp`: Proportionalverstärkung
+- `KP`: Proportionalverstärkung
 
 #### PI-Regler
 ```python
-regler = PI(Kp=2.0, Ti=1.0)
+regler = PI(KP=2.0, TI=1.0)
 ```
-- `Kp`: Proportionalverstärkung
-- `Ti`: Integrierzeit
+- `KP`: Proportionalverstärkung
+- `TI`: Integrierzeit
 
 #### PID-Regler
 ```python
-regler = PID(Kp=2.0, Ti=1.5, Td=0.3)
+regler = PID(KP=2.0, TI=1.5, TD=0.3)
 ```
-- `Kp`: Proportionalverstärkung
-- `Ti`: Integrierzeit
-- `Td`: Differenzierzeit
+- `KP`: Proportionalverstärkung
+- `TI`: Integrierzeit
+- `TD`: Differenzierzeit
 
 ### Strecken
 
 #### PT1-Strecke
 ```python
-strecke = PT1(K=2.0, T=1.0)
+strecke = PT1(KP=2.0, T=1.0)
 ```
-Übertragungsfunktion: `G(s) = K / (T·s + 1)`
+Übertragungsfunktion: `G(s) = KP / (T·s + 1)`
 
-- `K`: Verstärkung
+- `KP`: Verstärkung
 - `T`: Zeitkonstante
 
 #### PT2-Strecke
 ```python
-strecke = PT2(K=1.0, T1=2.0, T2=0.5)
+strecke = PT2(KP=1.0, T1=2.0, T2=0.5)
 ```
-Übertragungsfunktion: `G(s) = K / ((T1·s + 1)(T2·s + 1))`
+Übertragungsfunktion: `G(s) = KP / ((T1·s + 1)(T2·s + 1))`
 
-- `K`: Verstärkung
+- `KP`: Verstärkung
 - `T1`, `T2`: Zeitkonstanten
 
 ### Simulation
@@ -203,65 +230,17 @@ Zeigt automatisch:
 
 ## Beispiele
 
-Vollständige Beispiele findest du im `examples/` Verzeichnis:
+Vollständige Beispiele findest du im [examples](./examples) Verzeichnis:
 
 ```bash
-uv run examples/main.py
+uv run examples/example_signal.py
 ```
 
-## Entwicklung
+Oder interaktive Notebooks mit [Marimo](https://marimo.io/):
 
-### Tests ausführen
 ```bash
-# TODO: Tests implementieren
-pytest tests/
+uv run marimo edit notebooks/examples/01_grundlagen.py
 ```
-
-### Code-Qualität
-```bash
-# Type Checking
-pyright
-
-# Linting
-ruff check src/
-```
-
-## Erweiterungen
-
-### Weitere Strecken hinzufügen
-
-Erstelle neue Strecken in `src/regelung/strecken/`:
-
-```python
-# it.py
-from control import TransferFunction
-
-class IT1:
-    """IT1-Strecke: G(s) = K / (s·(T·s + 1))"""
-    def __init__(self, K: float, T: float):
-        self.K = K
-        self.T = T
-        self.G = TransferFunction([K], [T, 1, 0])
-    
-    def tf(self):
-        return self.G
-```
-
-Nicht vergessen in `__init__.py` zu exportieren!
-
-### Weitere Regler hinzufügen
-
-Analog können weitere Reglertypen in `src/regelung/regler/control.py` hinzugefügt werden.
-
-## Roadmap
-
-- [ ] Weitere Strecken (IT1, DT1, PT3)
-- [ ] Regler-Tuning (Ziegler-Nichols, CHR)
-- [ ] Bodediagramme
-- [ ] Pol-Nullstellen-Plots
-- [ ] Nyquist-Diagramme
-- [ ] Stabilitätsanalyse
-- [ ] Tests
 
 ## Lizenz
 
@@ -270,7 +249,3 @@ MIT
 ## Kontakt
 
 Bei Fragen oder Problemen erstelle bitte ein Issue im Repository.
-
----
-
-**Happy Controlling! 🎛️**

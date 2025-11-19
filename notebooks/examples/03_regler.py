@@ -101,13 +101,13 @@ def _(
 
     # Regler erstellen
     if regler_typ.value == "P":
-        regler_r = P(Kp=Kp.value)
+        regler_r = P(KP=Kp.value)
         regler_info = f"P(Kp={Kp.value})"
     elif regler_typ.value == "PI":
-        regler_r = PI(Kp=Kp.value, Ti=Ti.value)
+        regler_r = PI(KP=Kp.value, TI=Ti.value)
         regler_info = f"PI(Kp={Kp.value}, Ti={Ti.value})"
     else:
-        regler_r = PID(Kp=Kp.value, Ti=Ti.value, Td=Td.value)
+        regler_r = PID(KP=Kp.value, TI=Ti.value, TD=Td.value)
         regler_info = f"PID(Kp={Kp.value}, Ti={Ti.value}, Td={Td.value})"
 
     # Regelkreis
@@ -165,6 +165,11 @@ def _(mo, overshoot_r, steady_state_r):
         - **PID-Regler**: Schneller, aber kann überschwingen
         """
     )
+    return
+
+
+@app.cell
+def _():
     return
 
 
