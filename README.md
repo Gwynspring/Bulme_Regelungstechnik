@@ -48,7 +48,7 @@ pip install -e .
 from regelung import PT1, simulate_step, plot_step
 
 # PT1-Strecke erstellen
-strecke = PT1(K=2.0, T=1.0)
+strecke = PT1(KP=2.0, T=1.0)
 
 # Sprungantwort simulieren
 t, y = simulate_step(strecke.tf())
@@ -63,7 +63,7 @@ plot_step(t, y, title="PT1-Strecke")
 from regelung import PT2, PID, closed_loop, simulate_step, plot_step_with_metrics
 
 # Strecke und Regler definieren
-strecke = PT2(K=1.0, T1=2.0, T2=0.5)
+strecke = PT2(KP=1.0, T1=2.0, T2=0.5)
 regler = PID(KP=2.0, TI=1.5, TD=0.3)
 
 # Regelkreis schließen
@@ -82,11 +82,11 @@ plot_step_with_metrics(t, y,
 from regelung import PT1, P, closed_loop, simulate_step
 import matplotlib.pyplot as plt
 
-strecke = PT1(K=2.0, T=1.0)
+strecke = PT1(KP=2.0, T=1.0)
 
 plt.figure(figsize=(10, 6))
 
-for KP in [0.5, 1.0, 2.0, 3.0]:
+for Kp in [0.5, 1.0, 2.0, 3.0]:
     regler = P(KP=Kp)
     system = closed_loop(regler, strecke)
     t, y = simulate_step(system)
