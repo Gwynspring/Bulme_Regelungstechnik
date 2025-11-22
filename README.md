@@ -2,6 +2,7 @@
 
 ![Python](https://img.shields.io/badge/python-3.12+-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
+![CI](https://github.com/Gwynspring/Bulme_Regelungstechnik/workflows/CI/badge.svg)
 ![uv](https://img.shields.io/badge/uv-managed-blueviolet.svg)
 ![Control Systems](https://img.shields.io/badge/control--systems-0.10.2-orange.svg)
 ![Matplotlib](https://img.shields.io/badge/matplotlib-latest-red.svg)
@@ -48,7 +49,7 @@ pip install -e .
 from regelung import PT1, simulate_step, plot_step
 
 # PT1-Strecke erstellen
-strecke = PT1(KP=2.0, T=1.0)
+strecke = PT1(Kp=2.0, T=1.0)
 
 # Sprungantwort simulieren
 t, y = simulate_step(strecke.tf())
@@ -63,8 +64,8 @@ plot_step(t, y, title="PT1-Strecke")
 from regelung import PT2, PID, closed_loop, simulate_step, plot_step_with_metrics
 
 # Strecke und Regler definieren
-strecke = PT2(KP=1.0, T1=2.0, T2=0.5)
-regler = PID(KP=2.0, TI=1.5, TD=0.3)
+strecke = PT2(Kp=1.0, T1=2.0, T2=0.5)
+regler = PID(Kp=2.0, Ti=1.5, Td=0.3)
 
 # Regelkreis schließen
 system = closed_loop(regler, strecke)
@@ -82,15 +83,15 @@ plot_step_with_metrics(t, y,
 from regelung import PT1, P, closed_loop, simulate_step
 import matplotlib.pyplot as plt
 
-strecke = PT1(KP=2.0, T=1.0)
+strecke = PT1(Kp=2.0, T=1.0)
 
 plt.figure(figsize=(10, 6))
 
 for Kp in [0.5, 1.0, 2.0, 3.0]:
-    regler = P(KP=Kp)
+    regler = P(Kp=Kp)
     system = closed_loop(regler, strecke)
     t, y = simulate_step(system)
-    plt.plot(t, y, label=f"Kp={regler.KP}")
+    plt.plot(t, y, label=f"Kp={regler.Kp}")
 
 plt.grid(True)
 plt.legend()
@@ -142,43 +143,43 @@ Bulme_Regelungstechnik/
 
 #### P-Regler
 ```python
-regler = P(KP=1.5)
+regler = P(Kp=1.5)
 ```
-- `KP`: Proportionalverstärkung
+- `Kp`: Proportionalverstärkung
 
 #### PI-Regler
 ```python
-regler = PI(KP=2.0, TI=1.0)
+regler = PI(Kp=2.0, Ti=1.0)
 ```
-- `KP`: Proportionalverstärkung
-- `TI`: Integrierzeit
+- `Kp`: Proportionalverstärkung
+- `Ti`: Integrierzeit
 
 #### PID-Regler
 ```python
-regler = PID(KP=2.0, TI=1.5, TD=0.3)
+regler = PID(Kp=2.0, Ti=1.5, Td=0.3)
 ```
-- `KP`: Proportionalverstärkung
-- `TI`: Integrierzeit
-- `TD`: Differenzierzeit
+- `Kp`: Proportionalverstärkung
+- `Ti`: Integrierzeit
+- `Td`: Differenzierzeit
 
 ### Strecken
 
 #### PT1-Strecke
 ```python
-strecke = PT1(KP=2.0, T=1.0)
+strecke = PT1(Kp=2.0, T=1.0)
 ```
-Übertragungsfunktion: `G(s) = KP / (T·s + 1)`
+Übertragungsfunktion: `G(s) = Kp / (T·s + 1)`
 
-- `KP`: Verstärkung
+- `Kp`: Verstärkung
 - `T`: Zeitkonstante
 
 #### PT2-Strecke
 ```python
-strecke = PT2(KP=1.0, T1=2.0, T2=0.5)
+strecke = PT2(Kp=1.0, T1=2.0, T2=0.5)
 ```
-Übertragungsfunktion: `G(s) = KP / ((T1·s + 1)(T2·s + 1))`
+Übertragungsfunktion: `G(s) = Kp / ((T1·s + 1)(T2·s + 1))`
 
-- `KP`: Verstärkung
+- `Kp`: Verstärkung
 - `T1`, `T2`: Zeitkonstanten
 
 ### Simulation

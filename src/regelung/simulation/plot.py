@@ -275,6 +275,7 @@ def plot_signal(
     title="Signalverlauf",
     save=None,
     show=True,
+    show_input=False,
     xlabel="Zeit [s]",
     ylabel="Signal",
     figsize=(12, 6),
@@ -289,6 +290,7 @@ def plot_signal(
         title: Titel des Plots
         save: Pfad zum Speichern (optional)
         show: Plot anzeigen (True/False)
+        show_input: Zeige Eingangssignal in separatem Plot (default: False)
         xlabel: Label der x-Achse
         ylabel: Label der y-Achse
         figsize: Größe der Figure (width, height)
@@ -300,24 +302,45 @@ def plot_signal(
         >>> t = np.linspace(0, 10, 1000)
         >>> u = 5 * np.sin(2 * np.pi * 0.5 * t)  # 0.5 Hz Sinus
         >>> t_out, y = simulate_signal(strecke.tf(), t, u)
-        >>> plot_signal(t_out, y, u=u, title="PT1 mit Sinus-Anregung")
+        >>> plot_signal(t_out, y, u=u, show_input=True, title="PT1 mit Sinus-Anregung")
     """
-    fig, ax = plt.subplots(figsize=figsize)
+    # Erstelle Subplots: 2 Zeilen wenn Input gezeigt werden soll, sonst 1 Zeile
+    if show_input and u is not None:
+        fig, (ax_input, ax_output) = plt.subplots(
+            2, 1, figsize=(figsize[0], figsize[1] * 1.5), sharex=True
+        )
+    else:
+        fig, ax_output = plt.subplots(figsize=figsize)
 
-    # Eingangssignal (optional)
-    if u is not None:
-        ax.plot(t, u, "r--", linewidth=2, alpha=0.7, label="Eingang u(t)")
+    # ===== EINGANGSSIGNAL (oberer Plot) =====
+    if show_input and u is not None:
+        ax_input.plot(t, u, "r-", linewidth=2.5, label="Eingang u(t)")
 
-    # Ausgangssignal
-    ax.plot(t, y, "b-", linewidth=2.5, label="Ausgang y(t)")
+        # Styling für Input-Plot
+        ax_input.grid(True, alpha=0.3, linestyle="--")
+        ax_input.axhline(y=0, color="k", linewidth=0.5, alpha=0.5)
+        ax_input.set_title("Eingangssignal", fontsize=12, fontweight="bold")
+        ax_input.set_ylabel("u(t)", fontsize=12)
+        ax_input.legend(loc="best", fontsize=11)
 
-    # Styling
-    ax.grid(True, alpha=0.3, linestyle="--")
-    ax.axhline(y=0, color="k", linewidth=0.5, alpha=0.5)
-    ax.set_title(title, fontsize=14, fontweight="bold")
-    ax.set_xlabel(xlabel, fontsize=12)
-    ax.set_ylabel(ylabel, fontsize=12)
-    ax.legend(loc="best", fontsize=11)
+    # ===== AUSGANGSSIGNAL (unterer Plot / einziger Plot) =====
+    ax_output.plot(t, y, linewidth=2.5, color="#2E86AB", label="Ausgang y(t)")
+
+    # Styling für Output-Plot
+    ax_output.grid(True, alpha=0.3, linestyle="--")
+    ax_output.axhline(y=0, color="k", linewidth=0.5, alpha=0.5)
+    ax_output.set_title(
+        title if not (show_input and u is not None) else "Ausgangssignal",
+        fontsize=12 if (show_input and u is not None) else 14,
+        fontweight="bold",
+    )
+    ax_output.set_xlabel(xlabel, fontsize=12)
+    ax_output.set_ylabel(ylabel, fontsize=12)
+    ax_output.legend(loc="best", fontsize=11)
+
+    # Gesamttitel wenn beide Plots vorhanden
+    if show_input and u is not None:
+        fig.suptitle(title, fontsize=14, fontweight="bold", y=0.995)
 
     plt.tight_layout()
 

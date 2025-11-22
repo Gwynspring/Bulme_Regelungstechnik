@@ -19,6 +19,7 @@ classifiers = [
 
 dependencies = [
     "control>=0.10.2",
+    "marimo>=0.18.0",
     "matplotlib>=3.10.7",
     "numpy>=2.3.4",
     "scipy>=1.16.3",
