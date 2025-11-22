@@ -41,9 +41,7 @@ def plot_step(
     """
     if show_input:
         fig, (ax_input, ax_output) = plt.subplots(
-            2, 1,
-            figsize=(figsize[0], figsize[1] * 1.5),
-            sharex=True
+            2, 1, figsize=(figsize[0], figsize[1] * 1.5), sharex=True
         )
     else:
         fig, ax_output = plt.subplots(figsize=figsize)
@@ -65,7 +63,7 @@ def plot_step(
             )
 
             # Vertikale Sprung-Linie bei t=0 von 0 auf u_amplitude
-            ax_input.plot([0, 0], [0, u_amplitude], 'r-', linewidth=2.5)
+            ax_input.plot([0, 0], [0, u_amplitude], "r-", linewidth=2.5)
 
         # Vertikale Hilfslinie bei t=0
         ax_input.axvline(x=0, color="gray", linestyle=":", linewidth=1, alpha=0.5)
@@ -95,9 +93,11 @@ def plot_step(
 
     # Styling für Output-Plot
     ax_output.grid(True, alpha=0.3, linestyle="--")
-    ax_output.set_title(title if not show_input else "Ausgangssignal",
-                        fontsize=12 if show_input else 14,
-                        fontweight="bold")
+    ax_output.set_title(
+        title if not show_input else "Ausgangssignal",
+        fontsize=12 if show_input else 14,
+        fontweight="bold",
+    )
     ax_output.set_xlabel(xlabel, fontsize=12)
     ax_output.set_ylabel(ylabel, fontsize=12)
     ax_output.legend(loc="best", fontsize=10)
