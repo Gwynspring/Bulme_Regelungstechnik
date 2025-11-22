@@ -5,6 +5,7 @@ Visualisierungsfunktionen für Regelkreise.
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 def plot_step(
     t,
     y,
@@ -40,13 +41,13 @@ def plot_step(
     """
     if show_input:
         fig, (ax_input, ax_output) = plt.subplots(
-            2, 1, 
+            2, 1,
             figsize=(figsize[0], figsize[1] * 1.5),
             sharex=True
         )
     else:
         fig, ax_output = plt.subplots(figsize=figsize)
-    
+
     # ===== EINGANGSSIGNAL (oberer Plot) =====
     if show_input:
         if u_signal is not None:
@@ -62,22 +63,22 @@ def plot_step(
                 linewidth=2.5,
                 label=f"Eingang u(t) = {u_amplitude}",
             )
-            
+
             # Vertikale Sprung-Linie bei t=0 von 0 auf u_amplitude
             ax_input.plot([0, 0], [0, u_amplitude], 'r-', linewidth=2.5)
-        
+
         # Vertikale Hilfslinie bei t=0
         ax_input.axvline(x=0, color="gray", linestyle=":", linewidth=1, alpha=0.5)
-        
+
         # Styling für Input-Plot
         ax_input.grid(True, alpha=0.3, linestyle="--")
         ax_input.set_title("Eingangssignal", fontsize=12, fontweight="bold")
         ax_input.set_ylabel("u(t)", fontsize=12)
         ax_input.legend(loc="best", fontsize=10)
-    
+
     # ===== AUSGANGSSIGNAL (unterer Plot / einziger Plot) =====
     ax_output.plot(t, y, linewidth=2.5, color="#2E86AB", label="Ausgang y(t)")
-    
+
     # Endwert-Linie
     steady_state = y[-1]
     ax_output.axhline(
@@ -88,34 +89,34 @@ def plot_step(
         alpha=0.7,
         label=f"Endwert: {steady_state:.3f}",
     )
-    
+
     # Vertikale Linie bei t=0
     ax_output.axvline(x=0, color="gray", linestyle=":", linewidth=1, alpha=0.5)
-    
+
     # Styling für Output-Plot
     ax_output.grid(True, alpha=0.3, linestyle="--")
-    ax_output.set_title(title if not show_input else "Ausgangssignal", 
-                        fontsize=12 if show_input else 14, 
+    ax_output.set_title(title if not show_input else "Ausgangssignal",
+                        fontsize=12 if show_input else 14,
                         fontweight="bold")
     ax_output.set_xlabel(xlabel, fontsize=12)
     ax_output.set_ylabel(ylabel, fontsize=12)
     ax_output.legend(loc="best", fontsize=10)
-    
+
     # Gesamttitel wenn beide Plots vorhanden
     if show_input:
         fig.suptitle(title, fontsize=14, fontweight="bold", y=0.995)
-    
+
     plt.tight_layout()
-    
+
     if save:
         plt.savefig(save, dpi=300, bbox_inches="tight")
         print(f"✓ Plot gespeichert: {save}")
-    
+
     if show:
         plt.show()
     else:
         plt.close()
-    
+
     return fig  # Für marimo: Figure zurückgeben
 
 
@@ -263,7 +264,7 @@ def plot_step_with_metrics(
         plt.show()
     else:
         plt.close()
-    
+
     return fig  # Für marimo: Figure zurückgeben
 
 
@@ -328,7 +329,7 @@ def plot_signal(
         plt.show()
     else:
         plt.close()
-    
+
     return fig  # Für marimo: Figure zurückgeben
 
 
