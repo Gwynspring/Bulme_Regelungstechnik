@@ -21,7 +21,6 @@ def plot_step(
 ):
     """
     Plottet Sprungantwort oder beliebige Signale.
-
     Args:
         t: Zeitvektor
         y: Ausgangssignal
@@ -31,42 +30,56 @@ def plot_step(
         xlabel: Label der x-Achse
         ylabel: Label der y-Achse
         figsize: Größe der Figure (width, height)
-        show_input: Zeige Eingangssignal (default: False)
+        show_input: Zeige Eingangssignal in separatem Plot (default: False)
         u_amplitude: Amplitude des Sprungs (default: 1.0)
         u_signal: Beliebiges Eingangssignal (überschreibt u_amplitude)
-
     Beispiel:
         >>> from regelung import PT1, simulate_step, plot_step
         >>> strecke = PT1(K=2.0, T=1.0)
         >>> t, y = simulate_step(strecke.tf())
         >>> plot_step(t, y, show_input=True, u_amplitude=1.0)
     """
-    fig, ax = plt.subplots(figsize=figsize)
+    if show_input:
+        fig, (ax_input, ax_output) = plt.subplots(
+            2, 1, figsize=(figsize[0], figsize[1] * 1.5), sharex=True
+        )
+    else:
+        fig, ax_output = plt.subplots(figsize=figsize)
 
-    # Eingangssignal (optional)
+    # ===== EINGANGSSIGNAL (oberer Plot) =====
     if show_input:
         if u_signal is not None:
-            # Beliebiges Signal plotten
-            ax.plot(t, u_signal, "r--", linewidth=2, alpha=0.7, label="Eingang u(t)")
+            ax_input.plot(t, u_signal, "r-", linewidth=2.5, label="Eingang u(t)")
         else:
             # Standard-Sprung
             u = np.ones_like(t) * u_amplitude
             u[t < 0] = 0
-            ax.plot(
+            ax_input.plot(
                 t,
                 u,
-                "r--",
-                linewidth=2,
-                alpha=0.7,
+                "r-",
+                linewidth=2.5,
                 label=f"Eingang u(t) = {u_amplitude}",
             )
 
-    # Ausgangssignal
-    ax.plot(t, y, linewidth=2.5, color="#2E86AB", label="Ausgang y(t)")
+            # Vertikale Sprung-Linie bei t=0 von 0 auf u_amplitude
+            ax_input.plot([0, 0], [0, u_amplitude], "r-", linewidth=2.5)
+
+        # Vertikale Hilfslinie bei t=0
+        ax_input.axvline(x=0, color="gray", linestyle=":", linewidth=1, alpha=0.5)
+
+        # Styling für Input-Plot
+        ax_input.grid(True, alpha=0.3, linestyle="--")
+        ax_input.set_title("Eingangssignal", fontsize=12, fontweight="bold")
+        ax_input.set_ylabel("u(t)", fontsize=12)
+        ax_input.legend(loc="best", fontsize=10)
+
+    # ===== AUSGANGSSIGNAL (unterer Plot / einziger Plot) =====
+    ax_output.plot(t, y, linewidth=2.5, color="#2E86AB", label="Ausgang y(t)")
 
     # Endwert-Linie
     steady_state = y[-1]
-    ax.axhline(
+    ax_output.axhline(
         y=steady_state,
         color="olive",
         linestyle="--",
@@ -76,14 +89,22 @@ def plot_step(
     )
 
     # Vertikale Linie bei t=0
-    ax.axvline(x=0, color="gray", linestyle=":", linewidth=1, alpha=0.5)
+    ax_output.axvline(x=0, color="gray", linestyle=":", linewidth=1, alpha=0.5)
 
-    # Styling
-    ax.grid(True, alpha=0.3, linestyle="--")
-    ax.set_title(title, fontsize=14, fontweight="bold")
-    ax.set_xlabel(xlabel, fontsize=12)
-    ax.set_ylabel(ylabel, fontsize=12)
-    ax.legend(loc="best", fontsize=10)
+    # Styling für Output-Plot
+    ax_output.grid(True, alpha=0.3, linestyle="--")
+    ax_output.set_title(
+        title if not show_input else "Ausgangssignal",
+        fontsize=12 if show_input else 14,
+        fontweight="bold",
+    )
+    ax_output.set_xlabel(xlabel, fontsize=12)
+    ax_output.set_ylabel(ylabel, fontsize=12)
+    ax_output.legend(loc="best", fontsize=10)
+
+    # Gesamttitel wenn beide Plots vorhanden
+    if show_input:
+        fig.suptitle(title, fontsize=14, fontweight="bold", y=0.995)
 
     plt.tight_layout()
 
@@ -95,6 +116,8 @@ def plot_step(
         plt.show()
     else:
         plt.close()
+
+    return fig  # Für marimo: Figure zurückgeben
 
 
 def plot_step_with_metrics(
@@ -242,6 +265,8 @@ def plot_step_with_metrics(
     else:
         plt.close()
 
+    return fig  # Für marimo: Figure zurückgeben
+
 
 def plot_signal(
     t,
@@ -304,6 +329,8 @@ def plot_signal(
         plt.show()
     else:
         plt.close()
+
+    return fig  # Für marimo: Figure zurückgeben
 
 
 def get_step_metrics(t, y):
