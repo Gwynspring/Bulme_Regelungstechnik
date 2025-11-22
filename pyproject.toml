@@ -1,15 +1,112 @@
 [project]
 name = "regelung"
 version = "0.1.0"
-description = "Add your description here"
+description = "Bibliothek für Regelungstechnik"
 readme = "README.md"
 requires-python = ">=3.12"
+authors = [
+    {name = "Gwynspring", email = "gspurningm@gmail.com"}
+]
+license = {text = "MIT"}
+keywords = ["control", "control-systems", "regelungstechnik", "pid", "simulation"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Education",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering",
+]
+
 dependencies = [
     "control>=0.10.2",
-    "marimo>=0.17.8",
     "matplotlib>=3.10.7",
     "numpy>=2.3.4",
-    "pyzmq>=27.1.0",
     "scipy>=1.16.3",
-    "sympy>=1.14.0",
 ]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "ruff>=0.14.6",
+]
+notebook = [
+    "marimo>=0.17.8",
+]
+all = [
+    "regelung[dev,notebook]",
+]
+
+[project.urls]
+Documentation = "https://github.com/Gwynspring/Bulme_Regelungstechnik/wiki"
+Repository = "https://github.com/Gwynspring/Bulme_Regelungstechnik"
+Issues = "https://github.com/Gwynspring/Bulme_Regelungstechnik/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "-v",
+    "--strict-markers",
+    "--strict-config",
+    "--cov=regelung",
+]
+
+[tool.coverage.run]
+source = ["regelung"]
+omit = [
+    "*/tests/*",
+    "*/__pycache__/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+]
+
+[tool.ruff]
+# Python version
+target-version = "py312"
+
+# Exclude directories
+exclude = [
+    ".git",
+    "__pycache__",
+    "build",
+    "dist",
+    ".eggs",
+    "*.egg-info",
+    ".venv",
+    "notebooks",  # Marimo notebooks können andere Regeln haben
+]
+
+# Line length
+line-length = 88
+
+[tool.ruff.lint]
+# Enable these rule sets
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "I",   # isort
+    "W",   # pycodestyle warnings
+]
+
+# Ignore specific rules
+ignore = [
+    "E742",  # Ambiguous class names (I, D sind Standard in Regelungstechnik)
+]
+
+[tool.ruff.lint.isort]
+# Import sorting configuration
+known-first-party = ["regelung"]

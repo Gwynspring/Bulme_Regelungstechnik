@@ -1,33 +1,41 @@
 """Regelungstechnik-Bibliothek"""
 
-from regelung.regler import P, PI, PID
-from regelung.strecken import PT1, PT2, Totzeit
+from regelung.regler import PI, PID, P
 from regelung.simulation import (
-    closed_loop, 
-    simulate_step, 
-    simulate_signal,
-    simulate_step_scaled,
-    series_connection,  
+    closed_loop,
+    plot_signal,
     plot_step,
     plot_step_with_metrics,
-    plot_signal
+    series_connection,
+    simulate_signal,
+    simulate_step,
+    simulate_step_scaled,
 )
+from regelung.strecken import DT1, IT1, PT1, PT2, D, I, Totzeit
 
 __version__ = "0.1.0"
 
 __all__ = [
     # Regler
-    "P", "PI", "PID",
+    "P",
+    "PI",
+    "PID",
     # Strecken
-    "PT1", "PT2", "Totzeit",
+    "PT1",
+    "PT2",
+    "Totzeit",
+    "D",
+    "DT1",
+    "I",
+    "IT1",
     # Simulation
-    "closed_loop", 
-    "simulate_step", 
+    "closed_loop",
+    "simulate_step",
     "simulate_signal",
     "simulate_step_scaled",
-    "series_connection",  
+    "series_connection",
     # Plot
-    "plot_step", 
+    "plot_step",
     "plot_step_with_metrics",
-    "plot_signal"
+    "plot_signal",
 ]

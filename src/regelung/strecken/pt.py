@@ -1,21 +1,24 @@
-from control import TransferFunction
 import math
+
+from control import TransferFunction
+
 
 class PT1:
     """
-    PT1-Regelstrecke: G(s) = KP / (T s + 1)
+    PT1-Regelstrecke: G(s) = Kp / (T s + 1)
 
     Args:
-        KP (float): Verstärkung
+        Kp (float): Verstärkung
         T (float): Zeitkonstante
 
     Returns:
         PT1-Übertragungsfunktion
     """
-    def __init__(self, KP: float, T: float):
-        self.KP = KP
+
+    def __init__(self, Kp: float, T: float):
+        self.Kp = Kp
         self.T = T
-        self.G = TransferFunction([KP], [T, 1])
+        self.G = TransferFunction([Kp], [T, 1])
 
     def tf(self):
         return self.G
@@ -26,38 +29,36 @@ class PT2:
     PT2-Regelstrecke:
 
     Allgemeine Form:
-        G(s) = KP / ((T1 s + 1)(T2 s + 1))
+        G(s) = Kp / ((T1 s + 1)(T2 s + 1))
 
     Standardform:
-        G(s) = KP / (T² s² + 2 D T s + 1)
+        G(s) = Kp / (T² s² + 2 D T s + 1)
 
     Args:
-        KP (float): Verstärkung
+        Kp (float): Verstärkung
         T1 (float): Zeitkonstante 1
         T2 (float): Zeitkonstante 2
 
     Returns:
         PT2-Übertragungsfunktion
     """
-    def __init__(self, KP: float, T1: float, T2: float):
-        self.KP = KP
+
+    def __init__(self, Kp: float, T1: float, T2: float):
+        self.Kp = Kp
         self.T1 = T1
         self.T2 = T2
-        self.G = TransferFunction(
-            [KP],
-            [T1*T2, T1 + T2, 1]
-        )
+        self.G = TransferFunction([Kp], [T1 * T2, T1 + T2, 1])
 
     @classmethod
-    def from_damping(cls, KP: float, D: float, T: float):
+    def from_damping(cls, Kp: float, D: float, T: float):
         """
         PT2-Strecke aus Dämpfung D und Zeitkonstante T.
 
         Standardform:
-            G(s) = KP / (T² s² + 2 D T s + 1)
+            G(s) = Kp / (T² s² + 2 D T s + 1)
 
         Args:
-            KP (float): Verstärkung
+            Kp (float): Verstärkung
             D (float): Dämpfungsbeiwert
             T (float): Zeitkonstante
 
@@ -68,10 +69,10 @@ class PT2:
         a1 = 2 * D * T
         a0 = 1
 
-        G = TransferFunction([KP], [a2, a1, a0])
+        G = TransferFunction([Kp], [a2, a1, a0])
 
         obj = cls.__new__(cls)
-        obj.KP = KP
+        obj.Kp = Kp
         obj.T1 = None
         obj.T2 = None
         obj.G = G
@@ -105,4 +106,3 @@ class PT2:
         T = t1 * math.sqrt(1 - D**2) / math.pi
 
         return D, T
-

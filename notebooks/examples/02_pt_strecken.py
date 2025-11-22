@@ -12,9 +12,9 @@ def _():
 
 @app.cell(hide_code=True)
 def _():
-    from regelung import PT1, PT2, simulate_step, plot_step
+    from regelung import PT1, PT2, simulate_step, plot_step, closed_loop, PID
     import matplotlib.pyplot as plt
-    return PT1, PT2, plt, simulate_step
+    return PID, PT1, PT2, closed_loop, plot_step, plt, simulate_step
 
 
 @app.cell(hide_code=True)
@@ -135,6 +135,30 @@ def _(mo, plt, strecke_pt1, strecke_pt2, t1, t2, y1, y2):
 
 
 @app.cell(hide_code=True)
+def _(PID):
+    regler = PID(KP=2,TD=1,TI=2)
+    return (regler,)
+
+
+@app.cell
+def _(closed_loop, regler, strecke_pt2):
+    system = closed_loop(regler=regler, strecke=strecke_pt2)
+    return (system,)
+
+
+@app.cell
+def _(simulate_step, system):
+    t_s,y_s = simulate_step(system)
+    return t_s, y_s
+
+
+@app.cell
+def _(plot_step, t_s, y_s):
+    plot_step(t_s, y_s)
+    return
+
+
+@app.cell
 def _():
     return
 
