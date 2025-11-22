@@ -4,10 +4,9 @@ from regelung import (
     PT1,
     plot_step,
     simulate_signal,
+    simulate_step,
+    plot_signal
 )
-from regelung.simulation.core import simulate_step
-from regelung.simulation.plot import plot_signal
-
 
 def beispiel_simulate_signal():
     """Beispiel mit simulate_signal - volle Kontrolle"""
