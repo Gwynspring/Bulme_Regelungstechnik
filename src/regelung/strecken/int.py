@@ -1,101 +1,100 @@
+from control import TransferFunction
+
+
 class I:
     """
-    I-Regelstrecke (Integrator): G(s) = KI / s = 1 / (TI·s)
-    
-    Übertragungsfunktion: 
-    - Mit KI: G(s) = KI / s
-    - Mit TI: G(s) = 1 / (TI·s)
-    
-    Zusammenhang: KI = 1/TI
+    I-Regelstrecke (Integrator): G(s) = Ki / s = 1 / (Ti·s)
+
+    Übertragungsfunktion:
+    - Mit Ki: G(s) = Ki / s
+    - Mit Ti: G(s) = 1 / (Ti·s)
+
+    Zusammenhang: Ki = 1/Ti
     """
-    
-    def __init__(self, KI: float):
+
+    def __init__(self, Ki: float):
         """
         Erstellt I-Strecke mit Integrierverstärkung.
-        
+
         Args:
-            KI: Integrierverstärkung
+            Ki: Integrierverstärkung
         """
-        self.KI = KI
-        self.TI = 1.0 / KI
-        self.G = TransferFunction([self.KI], [1, 0])
-    
+        self.Ki = Ki
+        self.Ti = 1.0 / Ki
+        self.G = TransferFunction([self.Ki], [1, 0])
+
     @classmethod
-    def from_TI(cls, TI: float):
+    def from_Ti(cls, Ti: float):
         """
         Erstellt I-Strecke aus Integrierzeitkonstante.
-        
+
         Args:
-            TI: Integrierzeitkonstante
-            
+            Ti: Integrierzeitkonstante
+
         Returns:
-            I-Strecke mit KI = 1/TI
-            
+            I-Strecke mit Ki = 1/Ti
+
         Beispiel:
-            >>> strecke = I.from_TI(0.5)  # Ergibt KI=2.0
+            >>> strecke = I.from_Ti(0.5)  # Ergibt Ki=2.0
         """
-        KI = 1.0 / TI
-        return cls(KI)
-    
+        Ki = 1.0 / Ti
+        return cls(Ki)
+
     def tf(self):
         return self.G
-    
-    def __repr__(self):
-        return f"I(KI={self.KI:.3f}, TI={self.TI:.3f})"
 
-from control import TransferFunction
+    def __repr__(self):
+        return f"I(Ki={self.Ki:.3f}, Ti={self.Ti:.3f})"
+
 
 class IT1:
     """
-    IT1-Regelstrecke: G(s) = KI / (s·(T1·s + 1))
-    
+    IT1-Regelstrecke: G(s) = Ki / (s·(T1·s + 1))
+
     Kombination aus Integrator und PT1-Glied.
-    
+
     Übertragungsfunktion:
-    - G(s) = KI / (s·(T1·s + 1))
-    
-    Zusammenhang: KI = 1/TI
+    - G(s) = Ki / (s·(T1·s + 1))
+
+    Zusammenhang: Ki = 1/Ti
     """
-    
-    def __init__(self, T1: float, KI: float):
+
+    def __init__(self, T1: float, Ki: float):
         """
         Erstellt IT1-Strecke mit Integrierverstärkung.
-        
+
         Args:
             T1: Zeitkonstante des PT1-Glieds
-            KI: Integrierverstärkung
-            
+            Ki: Integrierverstärkung
+
         Beispiel:
-            >>> strecke = IT1(T1=2.0, KI=1.5)
+            >>> strecke = IT1(T1=2.0, Ki=1.5)
         """
         self.T1 = T1
-        self.KI = KI
-        self.TI = 1.0 / KI
-        self.G = TransferFunction([self.KI], [T1, 1, 0])
-    
+        self.Ki = Ki
+        self.Ti = 1.0 / Ki
+        self.G = TransferFunction([self.Ki], [T1, 1, 0])
+
     @classmethod
-    def from_TI(cls, T1: float, TI: float):
+    def from_Ti(cls, T1: float, Ti: float):
         """
         Erstellt IT1-Strecke aus Integrierzeitkonstante.
-        
+
         Args:
             T1: Zeitkonstante des PT1-Glieds
-            TI: Integrierzeitkonstante
-            
+            Ti: Integrierzeitkonstante
+
         Returns:
-            IT1-Strecke mit KI = 1/TI
-            
+            IT1-Strecke mit Ki = 1/Ti
+
         Beispiel:
-            >>> strecke = IT1.from_TI(T1=2.0, TI=0.67)
+            >>> strecke = IT1.from_Ti(T1=2.0, Ti=0.67)
         """
-        KI = 1.0 / TI
-        return cls(T1=T1, KI=KI)
-    
+        Ki = 1.0 / Ti
+        return cls(T1=T1, Ki=Ki)
+
     def tf(self):
         return self.G
-    
+
     def __repr__(self):
-        return f"IT1(T1={self.T1:.3f}, KI={self.KI:.3f}, TI={self.TI:.3f})"
-
-
-
+        return f"IT1(T1={self.T1:.3f}, Ki={self.Ki:.3f}, Ti={self.Ti:.3f})"
